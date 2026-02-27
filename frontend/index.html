@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAN Attack Control Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="logo">⚡ CAN Attack Dashboard</div>
+        <div class="header-actions">
+          <div class="user-info">
+            <span id="currentTime">--:--:--</span>
+          </div>
+          <button id="logoutBtn" class="btn-logout">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main dashboard -->
+    <main class="dashboard-container">
+      <!-- Connection Panel -->
+      <section class="panel connection-panel">
+        <div class="panel-header">
+          <h2>Connection Status</h2>
+          <div class="status-badge" id="connectionStatus">
+            <span class="status-indicator disconnected"></span>
+            <span class="status-text">Disconnected</span>
+          </div>
+        </div>
+
+        <div class="panel-content">
+          <div class="info-row">
+            <label>ESP32 Status:</label>
+            <span id="esp32Status" class="value disconnected-text">Not Connected</span>
+          </div>
+
+          <div class="info-row">
+            <label>WebSocket State:</label>
+            <span id="wsState" class="value">Connecting...</span>
+          </div>
+
+          <div class="info-row">
+            <label>Ping Latency:</label>
+            <span id="latency" class="value">-- ms</span>
+          </div>
+
+          <div class="info-row">
+            <label>Connected Clients:</label>
+            <span id="connectedClients" class="value">0</span>
+          </div>
+
+          <div class="action-buttons">
+            <button id="reconnectBtn" class="btn btn-primary">Reconnect</button>
+            <button id="clearLogsBtn" class="btn btn-secondary">Clear Logs</button>
+            <button id="exportLogsBtn" class="btn btn-secondary">Export CSV</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Attack Control Panel -->
+      <section class="panel attack-panel">
+        <div class="panel-header">
+          <h2>Attack Control</h2>
+          <div id="attackIndicator" class="attack-indicator">
+            <span class="indicator-dot"></span>
+            <span>Idle</span>
+          </div>
+        </div>
+
+        <div class="panel-content">
+          <div class="form-group">
+            <label for="attackType">Attack Type:</label>
+            <select id="attackType" class="form-control">
+              <option value="spoofing">Spoofing</option>
+              <option value="dos">DoS (Denial of Service)</option>
+              <option value="fuzzing">Fuzzing</option>
+            </select>
+          </div>
+
+          <!-- Spoofing Parameters -->
+          <div id="spoofingParams" class="attack-params">
+            <div class="form-group">
+              <label for="spoofId">CAN ID (Hex):</label>
+              <input
+                type="text"
+                id="spoofId"
+                class="form-control"
+                placeholder="0x123"
+                value="0x123"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="spoofPayload">Payload (8 bytes, hex spaced):</label>
+              <input
+                type="text"
+                id="spoofPayload"
+                class="form-control"
+                placeholder="AA BB CC DD EE FF 11 22"
+                value="AA BB CC DD EE FF 11 22"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="spoofFreq">Frequency (Hz): <span id="spoofFreqValue">500</span></label>
+              <input
+                type="range"
+                id="spoofFreq"
+                class="form-range"
+                min="1"
+                max="2000"
+                value="500"
+              />
+              <small>1 - 2000 Hz</small>
+            </div>
+
+            <div class="form-group">
+              <label for="spoofIntensity">Intensity: <span id="spoofIntensityValue">50</span></label>
+              <input
+                type="range"
+                id="spoofIntensity"
+                class="form-range"
+                min="1"
+                max="100"
+                value="50"
+              />
+              <small>1 - 100 (affects aggressiveness)</small>
+            </div>
+          </div>
+
+          <!-- DoS Parameters -->
+          <div id="dosParams" class="attack-params" style="display: none">
+            <div class="form-group">
+              <label>CAN ID: <strong>0x000</strong> (Fixed)</label>
+              <small>DoS attacks use fixed ID 0x000</small>
+            </div>
+
+            <div class="form-group">
+              <label for="dosPayload">Payload (Optional, 8 bytes hex spaced):</label>
+              <input
+                type="text"
+                id="dosPayload"
+                class="form-control"
+                placeholder="Leave empty for default"
+                value=""
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="dosFreq">Frequency (Hz): <span id="dosFreqValue">2000</span></label>
+              <input
+                type="range"
+                id="dosFreq"
+                class="form-range"
+                min="500"
+                max="5000"
+                value="2000"
+              />
+              <small>500 - 5000 Hz</small>
+            </div>
+
+            <div class="form-group">
+              <label for="dosIntensity">Intensity: <span id="dosIntensityValue">75</span></label>
+              <input
+                type="range"
+                id="dosIntensity"
+                class="form-range"
+                min="1"
+                max="100"
+                value="75"
+              />
+              <small>1 - 100</small>
+            </div>
+          </div>
+
+          <!-- Fuzzing Parameters -->
+          <div id="fuzzingParams" class="attack-params" style="display: none">
+            <div class="form-group">
+              <label for="fuzzMode">Fuzz Mode:</label>
+              <select id="fuzzMode" class="form-control">
+                <option value="random_id">Random ID</option>
+                <option value="random_payload">Random Payload</option>
+                <option value="id_payload">Random ID + Payload</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fuzzMinId">Min ID (Hex):</label>
+              <input
+                type="text"
+                id="fuzzMinId"
+                class="form-control"
+                placeholder="0x000"
+                value="0x000"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fuzzMaxId">Max ID (Hex):</label>
+              <input
+                type="text"
+                id="fuzzMaxId"
+                class="form-control"
+                placeholder="0x7FF"
+                value="0x7FF"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fuzzPayloadMode">Payload Mode:</label>
+              <select id="fuzzPayloadMode" class="form-control">
+                <option value="random">Random</option>
+                <option value="incremental">Incremental</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fuzzFreq">Frequency (Hz): <span id="fuzzFreqValue">500</span></label>
+              <input
+                type="range"
+                id="fuzzFreq"
+                class="form-range"
+                min="1"
+                max="2000"
+                value="500"
+              />
+              <small>1 - 2000 Hz</small>
+            </div>
+
+            <div class="form-group">
+              <label for="fuzzIntensity">Intensity: <span id="fuzzIntensityValue">50</span></label>
+              <input
+                type="range"
+                id="fuzzIntensity"
+                class="form-range"
+                min="1"
+                max="100"
+                value="50"
+              />
+              <small>1 - 100</small>
+            </div>
+          </div>
+
+          <!-- Control Buttons -->
+          <div class="control-buttons">
+            <button id="startAttackBtn" class="btn btn-success">Start Attack</button>
+            <button id="stopAttackBtn" class="btn btn-danger" disabled>Stop Attack</button>
+            <button id="pauseAttackBtn" class="btn btn-warning" disabled>Pause</button>
+            <button id="resumeAttackBtn" class="btn btn-warning" disabled>Resume</button>
+            <button id="killBtn" class="btn btn-kill">Emergency Kill</button>
+          </div>
+
+          <div class="attack-counter">
+            <p>Injections sent: <strong id="injectionCounter">0</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Parameters Panel -->
+      <section class="panel parameters-panel">
+        <div class="panel-header">
+          <h2>Live Parameter Control</h2>
+          <span class="panel-info">Update parameters during attack</span>
+        </div>
+
+        <div class="panel-content">
+          <div class="form-group">
+            <label for="liveFreq">Update Frequency (Hz):</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="liveFreq"
+                class="form-control"
+                min="1"
+                value="500"
+                placeholder="New frequency"
+              />
+              <button id="updateFreqBtn" class="btn btn-sm btn-primary">Update</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="liveId">Update CAN ID (Hex):</label>
+            <div class="input-group">
+              <input
+                type="text"
+                id="liveId"
+                class="form-control"
+                placeholder="0x123"
+              />
+              <button id="updateIdBtn" class="btn btn-sm btn-primary">Update</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="livePayload">Update Payload (8 bytes hex):</label>
+            <div class="input-group">
+              <input
+                type="text"
+                id="livePayload"
+                class="form-control"
+                placeholder="AA BB CC DD EE FF 11 22"
+              />
+              <button id="updatePayloadBtn" class="btn btn-sm btn-primary">Update</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="liveIntensity">Update Intensity:</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="liveIntensity"
+                class="form-control"
+                min="1"
+                max="100"
+                placeholder="50"
+              />
+              <button id="updateIntensityBtn" class="btn btn-sm btn-primary">Update</button>
+            </div>
+          </div>
+
+          <div class="status-info">
+            <p id="paramsStatus" class="status-text">No active attack</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Injection Log Panel -->
+      <section class="panel log-panel">
+        <div class="panel-header">
+          <h2>Injection Logs</h2>
+          <div class="log-controls">
+            <select id="logFilter" class="form-control-sm">
+              <option value="">All Events</option>
+              <option value="spoofing">Spoofing</option>
+              <option value="dos">DoS</option>
+              <option value="fuzzing">Fuzzing</option>
+            </select>
+            <label class="checkbox-label">
+              <input type="checkbox" id="autoScrollToggle" checked />
+              Auto-scroll
+            </label>
+          </div>
+        </div>
+
+        <div class="panel-content">
+          <div class="log-table-wrapper">
+            <table class="log-table" id="logTable">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Type</th>
+                  <th>CAN ID</th>
+                  <th>Payload</th>
+                  <th>Frequency</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="logBody">
+                <tr class="log-empty">
+                  <td colspan="6">No events yet...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="log-stats">
+            <span>Total events: <strong id="logCount">0</strong></span>
+            <span>Displayed: <strong id="displayedCount">0</strong></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Notification Area -->
+    <div id="notificationArea" class="notification-area"></div>
+
+    <!-- Scripts -->
+    <script src="/js/utils.js"></script>
+    <script src="/js/websocket-client.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>
