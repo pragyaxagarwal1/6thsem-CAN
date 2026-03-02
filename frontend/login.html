@@ -1,280 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CAN Attack Dashboard - Login</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAN Attack Dashboard - Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
-      .login-container {
-        background: rgba(22, 33, 62, 0.8);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 40px;
-        width: 100%;
-        max-width: 400px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      }
+    :root {
+      --bg-dark: #07080d;
+      --neon-cyan: #00f2ff;
+      --neon-pink: #ff00ff;
+      --text-dim: #9499b0;
+      --glass-blur: blur(12px);
+    }
 
-      .login-header {
-        text-align: center;
-        margin-bottom: 40px;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      .login-header h1 {
-        font-size: 28px;
-        margin-bottom: 8px;
-        background: linear-gradient(135deg, #00d4ff, #ff006e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+    }
 
-      .login-header p {
-        color: #aaa;
-        font-size: 14px;
-      }
+    .login-container {
+      background: rgba(16, 18, 27, 0.7);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 50px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 1;
+    }
 
-      .form-group {
-        margin-bottom: 20px;
-      }
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+      z-index: -1;
+      border-radius: 22px;
+      opacity: 0.15;
+    }
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #e0e0e0;
-      }
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-      input[type='password'] {
-        width: 100%;
-        padding: 12px 16px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        color: #fff;
-        font-size: 14px;
-        transition: all 0.3s ease;
-      }
+    .login-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-      input[type='password']:focus {
-        outline: none;
-        border-color: #00d4ff;
-        background: rgba(0, 212, 255, 0.05);
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-      }
+    .login-header p {
+      color: var(--text-dim);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
 
-      .login-btn {
-        width: 100%;
-        padding: 12px;
-        background: linear-gradient(135deg, #00d4ff, #0099ff);
-        border: none;
-        border-radius: 8px;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 10px;
-      }
+    .form-group {
+      margin-bottom: 25px;
+    }
 
-      .login-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
-      }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
 
-      .login-btn:active {
-        transform: translateY(0);
-      }
+    input[type='password'] {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
+    }
 
-      .login-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
+    input[type='password']:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+    }
 
-      .error-message {
-        background: rgba(255, 0, 106, 0.1);
-        border: 1px solid rgba(255, 0, 106, 0.3);
-        color: #ff006e;
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        margin-bottom: 20px;
-        display: none;
-      }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--neon-cyan), #0099ff);
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 15px;
+    }
 
-      .error-message.show {
-        display: block;
-      }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+    }
 
-      .success-message {
-        background: rgba(0, 212, 255, 0.1);
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        color: #00d4ff;
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        margin-bottom: 20px;
-        display: none;
-      }
+    .error-message {
+      background: rgba(255, 62, 62, 0.1);
+      border: 1px solid rgba(255, 62, 62, 0.3);
+      color: #ff3e3e;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 25px;
+      display: none;
+      text-align: center;
+    }
 
-      .success-message.show {
-        display: block;
-      }
+    .success-message {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: #00ff88;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 25px;
+      display: none;
+      text-align: center;
+    }
 
-      .loading {
-        display: inline-block;
-        width: 4px;
-        height: 4px;
-        background: #00d4ff;
-        border-radius: 50%;
-        animation: pulse 1.5s infinite;
-        margin-left: 8px;
-      }
+    .show {
+      display: block;
+    }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.3;
-        }
-        50% {
-          opacity: 1;
-        }
-      }
+    .footer {
+      text-align: center;
+      color: #444;
+      font-size: 10px;
+      margin-top: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
 
-      .footer {
-        text-align: center;
-        color: #666;
-        font-size: 12px;
-        margin-top: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="login-container">
-      <div class="login-header">
-        <h1>⚡ CAN Attack Dashboard</h1>
-        <p>Real-time CAN Injection Control</p>
-      </div>
-
-      <div class="error-message" id="errorMessage"></div>
-      <div class="success-message" id="successMessage"></div>
-
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="password">Master Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter dashboard password"
-            required
-          />
-        </div>
-
-        <button type="submit" class="login-btn" id="loginBtn">
-          Sign In<span class="loading" id="loadingSpinner" style="display: none"></span>
-        </button>
-      </form>
-
-      <div class="footer">
-        <p>CAN Attack Control Dashboard v1.0</p>
-        <p>© 2026 All rights reserved</p>
-      </div>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>CAN SECURE</h1>
+      <p>Attack Control Interface</p>
     </div>
 
-    <script>
-      const loginForm = document.getElementById('loginForm');
-      const passwordInput = document.getElementById('password');
-      const loginBtn = document.getElementById('loginBtn');
-      const errorMessage = document.getElementById('errorMessage');
-      const successMessage = document.getElementById('successMessage');
-      const loadingSpinner = document.getElementById('loadingSpinner');
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="password">ACCESS KEY</label>
+        <input type="password" id="password" name="password" placeholder="••••••••••••" required />
+      </div>
 
-        const password = passwordInput.value.trim();
+      <button type="submit" class="login-btn" id="loginBtn">
+        INITIALIZE SESSION <span id="loadingSpinner" style="display: none; opacity: 0.5;">...</span>
+      </button>
+    </form>
 
-        if (!password) {
-          showError('Please enter a password');
-          return;
-        }
+    <div class="footer">
+      <p>AUTHORIZED PERSONNEL ONLY</p>
+      <p>© 2026 QUANTUM CYBER SYSTEMS</p>
+    </div>
+  </div>
 
-        // Disable button and show loading
-        loginBtn.disabled = true;
-        loadingSpinner.style.display = 'inline-block';
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const loadingSpinner = document.getElementById('loadingSpinner');
 
-        try {
-          const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ password }),
-          });
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('[Login] Form submitted');
 
-          const data = await response.json();
+      const password = passwordInput.value.trim();
 
-          if (response.ok && data.success) {
-            // Store token in localStorage
-            localStorage.setItem('dashboardToken', data.token);
-            localStorage.setItem('loginTime', Date.now());
+      if (!password) {
+        showError('Please enter a password');
+        return;
+      }
 
-            showSuccess('Login successful! Redirecting...');
+      // Disable button and show loading
+      loginBtn.disabled = true;
+      loadingSpinner.style.display = 'inline-block';
 
-            setTimeout(() => {
-              window.location.href = '/dashboard';
-            }, 500);
-          } else {
-            showError(data.error || 'Login failed');
-            loginBtn.disabled = false;
-            loadingSpinner.style.display = 'none';
-          }
-        } catch (error) {
-          console.error('Login error:', error);
-          showError('Network error. Please try again.');
+      try {
+        console.log('[Login] Sending request to /api/login...');
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password }),
+        });
+
+        console.log('[Login] Response status:', response.status);
+        const data = await response.json();
+        console.log('[Login] Response data:', data);
+
+        if (response.ok && data.success) {
+          console.log('[Login] Storing token and login time...');
+          localStorage.setItem('dashboardToken', data.token);
+          localStorage.setItem('loginTime', Date.now().toString());
+
+          showSuccess('Login successful! Redirecting...');
+
+          setTimeout(() => {
+            console.log('[Login] Redirecting to /dashboard...');
+            window.location.href = '/dashboard';
+          }, 500);
+        } else {
+          const errorMsg = data.error || 'Login failed';
+          console.error('[Login] Error:', errorMsg);
+          showError(errorMsg);
           loginBtn.disabled = false;
           loadingSpinner.style.display = 'none';
         }
-      });
-
-      function showError(msg) {
-        errorMessage.textContent = msg;
-        errorMessage.classList.add('show');
-        successMessage.classList.remove('show');
+      } catch (error) {
+        console.error('[Login] Critical error:', error);
+        showError('System error: ' + error.message);
+        loginBtn.disabled = false;
+        loadingSpinner.style.display = 'none';
       }
+    });
 
-      function showSuccess(msg) {
-        successMessage.textContent = msg;
-        successMessage.classList.add('show');
-        errorMessage.classList.remove('show');
-      }
+    function showError(msg) {
+      errorMessage.textContent = msg;
+      errorMessage.classList.add('show');
+      successMessage.classList.remove('show');
+    }
 
-      // Check if already logged in
-      if (localStorage.getItem('dashboardToken')) {
-        window.location.href = '/dashboard';
-      }
+    function showSuccess(msg) {
+      successMessage.textContent = msg;
+      successMessage.classList.add('show');
+      errorMessage.classList.remove('show');
+    }
 
-      // Clear password on page load
-      passwordInput.value = '';
-    </script>
-  </body>
+    // Check if already logged in
+    if (localStorage.getItem('dashboardToken')) {
+      console.log('[Login] Active session detected, redirecting...');
+      window.location.href = '/dashboard';
+    }
+
+    // Clear password on page load
+    passwordInput.value = '';
+  </script>
+</body>
+
 </html>

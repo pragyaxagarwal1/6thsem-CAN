@@ -155,13 +155,21 @@ class UIManager {
     if (connected) {
       this.connectionStatus.classList.remove('disconnected');
       this.connectionStatus.classList.add('connected');
-      this.esp32Status.textContent = 'Connected';
+      this.statusText = this.connectionStatus.querySelector('.status-text');
+      if (this.statusText) this.statusText.textContent = 'CONNECTED';
+      
+      this.esp32Status.textContent = 'OPERATIONAL';
       this.esp32Status.classList.remove('disconnected-text');
+      this.esp32Status.classList.add('success-text');
     } else {
       this.connectionStatus.classList.add('disconnected');
       this.connectionStatus.classList.remove('connected');
-      this.esp32Status.textContent = 'Not Connected';
+      this.statusText = this.connectionStatus.querySelector('.status-text');
+      if (this.statusText) this.statusText.textContent = 'DISCONNECTED';
+
+      this.esp32Status.textContent = 'OFFLINE';
       this.esp32Status.classList.add('disconnected-text');
+      this.esp32Status.classList.remove('success-text');
     }
   }
 
@@ -169,14 +177,14 @@ class UIManager {
    * Update WebSocket state
    */
   updateWebSocketState(state) {
-    this.wsState.textContent = state;
+    this.wsState.textContent = state.toUpperCase();
   }
 
   /**
    * Update latency
    */
   updateLatency(ms) {
-    this.latency.textContent = `${ms} ms`;
+    this.latency.textContent = `${ms} MS`;
   }
 
   /**
@@ -196,7 +204,7 @@ class UIManager {
       this.attackIndicator.classList.add('active');
       this.attackIndicator.innerHTML = `
         <span class="indicator-dot"></span>
-        <span>ATTACK ACTIVE - ${attackType.toUpperCase()}</span>
+        <span>VECTOR ACTIVE: ${attackType.toUpperCase()}</span>
       `;
       this.startAttackBtn.disabled = true;
       this.stopAttackBtn.disabled = false;
@@ -206,8 +214,8 @@ class UIManager {
     } else {
       this.attackIndicator.classList.remove('active');
       this.attackIndicator.innerHTML = `
-        <span class="indicator-dot"></span>
-        <span>Idle</span>
+        <span class="indicator-dot" style="width: 8px; height: 8px; border-radius: 50%; background: currentColor;"></span>
+        <span>IDLE</span>
       `;
       this.startAttackBtn.disabled = false;
       this.stopAttackBtn.disabled = true;

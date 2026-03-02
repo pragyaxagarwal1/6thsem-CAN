@@ -15,16 +15,21 @@ class AuthManager {
     this.loginTime = localStorage.getItem('loginTime');
 
     if (!this.token || !this.loginTime) {
+      console.log('[Auth] No session found');
       return false;
     }
 
     // Check session timeout
     const elapsed = Date.now() - parseInt(this.loginTime);
+    console.log(`[Auth] Session elapsed: ${Math.floor(elapsed / 1000)}s / ${this.sessionTimeout / 1000}s`);
+
     if (elapsed > this.sessionTimeout) {
+      console.log('[Auth] Session expired');
       this.logout();
       return false;
     }
 
+    console.log('[Auth] Session valid');
     return true;
   }
 
