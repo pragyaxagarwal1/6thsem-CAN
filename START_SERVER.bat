@@ -40,7 +40,10 @@ echo Starting server...
 echo ========================================
 echo.
 echo The dashboard will be available at:
-echo   http://localhost:3000/login
+echo   Local:   http://localhost:3000/login
+echo   Network: http://(your-ip):3000/login
+echo.
+echo NOTE: Ensure port 3000 is open in your firewall.
 echo.
 echo Default password: admin@123
 echo.

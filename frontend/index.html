@@ -9,263 +9,191 @@
 </head>
 
 <body>
-  <!-- Header -->
-  <header class="dashboard-header">
-    <div class="header-content">
-      <div class="logo">
-        CAN SECURE <span style="font-size: 0.5em; opacity: 0.6; margin-left: 10px; font-family: 'Inter'">v2.0.4</span>
+  <!-- MATRIX BACKGROUND -->
+  <canvas id="matrix-bg"></canvas>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>CAN_INTRUSION_CONSOLE</h1>
+        <span>REAL-TIME BUS EXPLOITATION INTERFACE <span style="font-size: 0.8em; opacity: 0.6; margin-left: 10px; font-family: 'JetBrains Mono'">v2.0.4</span></span>
       </div>
-      <div class="header-actions">
-        <div class="user-info">
-          SYSTEM TIME: <span id="currentTime">--:--:--</span>
-        </div>
-        <button id="logoutBtn" class="btn-logout">TERMINATE SESSION</button>
+      <div class="header-right">
+        <span id="currentTime">--:--:--</span>
+        <button id="logoutBtn" class="btn-outline">TERMINATE SESSION</button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Main dashboard -->
-  <main class="dashboard-container">
-    <!-- Connection Panel -->
-    <section class="panel connection-panel">
-      <div class="panel-header">
-        <h2>Network Status</h2>
-        <div class="status-badge disconnected" id="connectionStatus">
-          <span class="status-indicator"></span>
-          <span class="status-text">DISCONNECTED</span>
-        </div>
-      </div>
-
-      <div class="panel-content">
-        <div class="info-row">
-          <label>HARDWARE LINK:</label>
-          <span id="esp32Status" class="value disconnected-text">OFFLINE</span>
-        </div>
-
-        <div class="info-row">
-          <label>GATEWAY STATE:</label>
-          <span id="wsState" class="value">INITIALIZING...</span>
-        </div>
-
-        <div class="info-row">
-          <label>LINK LATENCY:</label>
-          <span id="latency" class="value">-- MS</span>
-        </div>
-
-        <div class="info-row">
-          <label>NODES ONLINE:</label>
-          <span id="connectedClients" class="value">0</span>
-        </div>
-
-        <div class="control-buttons" style="grid-template-columns: 1fr; margin-top: 20px;">
-          <button id="reconnectBtn" class="btn btn-primary">RESTORE CONNECTION</button>
-          <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button id="clearLogsBtn" class="btn btn-secondary" style="flex: 1;">CLEAR</button>
-            <button id="exportLogsBtn" class="btn btn-secondary" style="flex: 1;">EXPORT</button>
+    <!-- Main dashboard -->
+    <main class="grid">
+      <!-- Network Status -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>NETWORK_STATUS</h2>
+          <div class="badge offline" id="connectionStatus">
+            <span class="status-text">DISCONNECTED</span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Attack Control Panel -->
-    <section class="panel attack-panel">
-      <div class="panel-header">
-        <h2>Security Assessment</h2>
-        <div id="attackIndicator" class="attack-indicator">
-          <span class="indicator-dot"
-            style="width: 8px; height: 8px; border-radius: 50%; background: currentColor;"></span>
-          <span>IDLE</span>
+        <div class="info-block">
+          <div>ESP32: <span id="esp32Status" class="disconnected-text">OFFLINE</span></div>
+          <div>GATEWAY: <span id="wsState">INITIALIZING...</span></div>
+          <div>LATENCY: <span id="latency">-- MS</span></div>
+          <div>CLIENTS: <span id="connectedClients">0</span></div>
         </div>
-      </div>
 
-      <div class="panel-content">
-        <div class="form-group">
-          <label for="attackType">SELECT VECTOR:</label>
+        <div class="btn-row">
+          <button id="reconnectBtn" class="btn-outline">RESTORE CONNECTION</button>
+          <button id="clearLogsBtn" class="btn-outline">CLEAR</button>
+          <button id="exportLogsBtn" class="btn-outline">EXPORT</button>
+        </div>
+      </section>
+
+      <!-- Attack Control Panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>ATTACK_CONTROL</h2>
+          <div id="attackIndicator" class="badge neutral">
+            <span>IDLE</span>
+          </div>
+        </div>
+
+        <div class="form-area">
+          <label for="attackType">SELECT VECTOR</label>
           <select id="attackType" class="form-control">
             <option value="spoofing">SPOOFING (ID INJECTION)</option>
             <option value="dos">DoS (DENIAL OF SERVICE)</option>
             <option value="fuzzing">FUZZING (RANDOMIZED)</option>
           </select>
-        </div>
 
-        <!-- Spoofing Parameters -->
-        <div id="spoofingParams" class="attack-params">
-          <div class="form-group">
-            <label for="spoofId">TARGET CAN ID (HEX):</label>
-            <input type="text" id="spoofId" class="form-control" placeholder="0x123" value="0x123" />
+          <!-- Spoofing Parameters -->
+          <div id="spoofingParams" class="attack-params">
+            <label for="spoofId">TARGET CAN ID (HEX)</label>
+            <input type="text" id="spoofId" class="form-control" value="0x123" />
+
+            <label for="spoofPayload">PAYLOAD (8 BYTES HEX)</label>
+            <input type="text" id="spoofPayload" class="form-control" value="AA BB CC DD EE FF 11 22" />
+
+            <label for="spoofFreq">BURST FREQUENCY (HZ): <span id="spoofFreqValue">500</span></label>
+            <input type="range" id="spoofFreq" min="1" max="2000" value="500" />
+
+            <label for="spoofIntensity">THROUGHPUT INTENSITY: <span id="spoofIntensityValue">50</span></label>
+            <input type="range" id="spoofIntensity" min="1" max="100" value="50" />
           </div>
 
-          <div class="form-group">
-            <label for="spoofPayload">PAYLOAD (8 BYTES HEX):</label>
-            <input type="text" id="spoofPayload" class="form-control" placeholder="AA BB CC DD EE FF 11 22"
-              value="AA BB CC DD EE FF 11 22" />
+          <!-- DoS Parameters -->
+          <div id="dosParams" class="attack-params" style="display: none">
+            <label>PRIORITY OVERRIDE: <strong>0x000</strong></label>
+
+            <label for="dosPayload">CUSTOM FLOOD PAYLOAD</label>
+            <input type="text" id="dosPayload" class="form-control" value="" />
+
+            <label for="dosFreq">FLOOD RATE (HZ): <span id="dosFreqValue">2000</span></label>
+            <input type="range" id="dosFreq" min="500" max="5000" value="2000" />
+
+            <label for="dosIntensity">BUS LOAD: <span id="dosIntensityValue">75</span></label>
+            <input type="range" id="dosIntensity" min="1" max="100" value="75" />
           </div>
 
-          <div class="form-group">
-            <label for="spoofFreq">BURST FREQUENCY (HZ): <span id="spoofFreqValue"
-                style="color: var(--neon-cyan)">500</span></label>
-            <input type="range" id="spoofFreq" class="form-range" min="1" max="2000" value="500" />
-          </div>
-
-          <div class="form-group">
-            <label for="spoofIntensity">THROUGHPUT INTENSITY: <span id="spoofIntensityValue"
-                style="color: var(--neon-cyan)">50</span></label>
-            <input type="range" id="spoofIntensity" class="form-range" min="1" max="100" value="50" />
-          </div>
-        </div>
-
-        <!-- DoS Parameters -->
-        <div id="dosParams" class="attack-params" style="display: none">
-          <div class="form-group">
-            <label>PRIORITY OVERRIDE: <strong style="color: var(--neon-pink)">0x000</strong></label>
-          </div>
-
-          <div class="form-group">
-            <label for="dosPayload">CUSTOM FLOOD PAYLOAD:</label>
-            <input type="text" id="dosPayload" class="form-control" placeholder="DEFAULT (NULL)" value="" />
-          </div>
-
-          <div class="form-group">
-            <label for="dosFreq">FLOOD RATE (HZ): <span id="dosFreqValue"
-                style="color: var(--neon-pink)">2000</span></label>
-            <input type="range" id="dosFreq" class="form-range" min="500" max="5000" value="2000" />
-          </div>
-
-          <div class="form-group">
-            <label for="dosIntensity">BUS LOAD: <span id="dosIntensityValue"
-                style="color: var(--neon-pink)">75</span></label>
-            <input type="range" id="dosIntensity" class="form-range" min="1" max="100" value="75" />
-          </div>
-        </div>
-
-        <!-- Fuzzing Parameters -->
-        <div id="fuzzingParams" class="attack-params" style="display: none">
-          <div class="form-group">
-            <label for="fuzzMode">FUZZ LOGIC:</label>
+          <!-- Fuzzing Parameters -->
+          <div id="fuzzingParams" class="attack-params" style="display: none">
+            <label for="fuzzMode">FUZZ LOGIC</label>
             <select id="fuzzMode" class="form-control">
               <option value="random_id">ID RANDOMIZATION</option>
               <option value="random_payload">PAYLOAD RANDOMIZATION</option>
               <option value="id_payload">FULL RANDOMIZATION</option>
             </select>
-          </div>
 
-          <div style="display: flex; gap: 15px;">
-            <div class="form-group" style="flex: 1;">
-              <label for="fuzzMinId">MIN ID:</label>
-              <input type="text" id="fuzzMinId" class="form-control" placeholder="0x000" value="0x000" />
+            <div style="display: flex; gap: 15px;">
+              <div style="flex: 1;">
+                <label for="fuzzMinId">MIN ID</label>
+                <input type="text" id="fuzzMinId" class="form-control" value="0x000" />
+              </div>
+              <div style="flex: 1;">
+                <label for="fuzzMaxId">MAX ID</label>
+                <input type="text" id="fuzzMaxId" class="form-control" value="0x7FF" />
+              </div>
             </div>
-            <div class="form-group" style="flex: 1;">
-              <label for="fuzzMaxId">MAX ID:</label>
-              <input type="text" id="fuzzMaxId" class="form-control" placeholder="0x7FF" value="0x7FF" />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label for="fuzzPayloadMode">DATA GENERATION:</label>
+            <label for="fuzzPayloadMode">DATA GENERATION</label>
             <select id="fuzzPayloadMode" class="form-control">
               <option value="random">STOCHASTIC</option>
               <option value="incremental">SEQUENTIAL</option>
             </select>
+
+            <label for="fuzzFreq">SCAN VELOCITY (HZ): <span id="fuzzFreqValue">500</span></label>
+            <input type="range" id="fuzzFreq" min="1" max="2000" value="500" />
+
+            <label for="fuzzIntensity">FUZZ INTENSITY: <span id="fuzzIntensityValue">50</span></label>
+            <input type="range" id="fuzzIntensity" min="1" max="100" value="50" />
           </div>
 
-          <div class="form-group">
-            <label for="fuzzFreq">SCAN VELOCITY (HZ): <span id="fuzzFreqValue"
-                style="color: var(--neon-yellow)">500</span></label>
-            <input type="range" id="fuzzFreq" class="form-range" min="1" max="2000" value="500" />
+          <div class="btn-row">
+            <button id="startAttackBtn" class="btn-primary">START VECTOR</button>
+            <button id="stopAttackBtn" class="btn-danger" disabled>HALT</button>
+            <button id="pauseAttackBtn" class="btn-outline" disabled>SUSPEND</button>
+            <button id="resumeAttackBtn" class="btn-outline" disabled>RESUME</button>
+            <button id="killBtn" class="btn-danger-outline">EMERGENCY</button>
           </div>
 
-          <div class="form-group">
-            <label for="fuzzIntensity">FUZZ INTENSITY: <span id="fuzzIntensityValue"
-                style="color: var(--neon-yellow)">50</span></label>
-            <input type="range" id="fuzzIntensity" class="form-range" min="1" max="100" value="50" />
-          </div>
+          <div class="counter" id="injectionArea">TOTAL PACKETS INJECTED: <strong id="injectionCounter">0</strong></div>
+        </div>
+      </section>
+
+      <!-- Live Parameters Panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>LIVE_OVERRIDE</h2>
         </div>
 
-        <!-- Control Buttons -->
-        <div class="control-buttons">
-          <button id="startAttackBtn" class="btn btn-success">START VECTOR</button>
-          <button id="stopAttackBtn" class="btn btn-danger" disabled>HALT ASSESSMENT</button>
-          <button id="pauseAttackBtn" class="btn btn-secondary" disabled>SUSPEND</button>
-          <button id="resumeAttackBtn" class="btn btn-secondary" disabled>RESUME</button>
-          <button id="killBtn" class="btn btn-kill">EMERGENCY SHUTDOWN</button>
-        </div>
-
-        <div class="attack-counter">
-          <p>TOTAL PACKETS INJECTED</p>
-          <strong id="injectionCounter">0</strong>
-        </div>
-      </div>
-    </section>
-
-    <!-- Live Parameters Panel -->
-    <section class="panel parameters-panel">
-      <div class="panel-header">
-        <h2>Live Stream Adjustment</h2>
-      </div>
-
-      <div class="panel-content">
-        <div class="form-group">
-          <label for="liveFreq">FREQUENCE OVERRIDE (HZ):</label>
+        <div class="form-area">
+          <label for="liveFreq">FREQUENCY HOT-SWAP (HZ)</label>
           <div style="display: flex; gap: 8px;">
             <input type="number" id="liveFreq" class="form-control" min="1" value="500" />
-            <button id="updateFreqBtn" class="btn btn-primary" style="padding: 0 15px;">SET</button>
+            <button id="updateFreqBtn" class="btn-primary" style="padding: 0 15px;">SET</button>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="liveId">CAN ID HOT-SWAP (HEX):</label>
+          <label for="liveId">CAN ID HOT-SWAP (HEX)</label>
           <div style="display: flex; gap: 8px;">
             <input type="text" id="liveId" class="form-control" placeholder="0x123" />
-            <button id="updateIdBtn" class="btn btn-primary" style="padding: 0 15px;">SET</button>
+            <button id="updateIdBtn" class="btn-primary" style="padding: 0 15px;">SET</button>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="livePayload">DATA HOT-SWAP:</label>
+          <label for="livePayload">DATA HOT-SWAP</label>
           <div style="display: flex; gap: 8px;">
             <input type="text" id="livePayload" class="form-control" placeholder="AA BB CC..." />
-            <button id="updatePayloadBtn" class="btn btn-primary" style="padding: 0 15px;">SET</button>
+            <button id="updatePayloadBtn" class="btn-primary" style="padding: 0 15px;">SET</button>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="liveIntensity">INTENSITY BIAS:</label>
+          <label for="liveIntensity">INTENSITY BIAS</label>
           <div style="display: flex; gap: 8px;">
             <input type="number" id="liveIntensity" class="form-control" min="1" max="100" placeholder="50" />
-            <button id="updateIntensityBtn" class="btn btn-primary" style="padding: 0 15px;">SET</button>
+            <button id="updateIntensityBtn" class="btn-primary" style="padding: 0 15px;">SET</button>
+          </div>
+
+          <div class="counter" id="paramsStatus">Ready for command...</div>
+        </div>
+      </section>
+
+      <!-- Injection Log Panel -->
+      <section class="panel full">
+        <div class="panel-header">
+          <h2>INJECTION_LOG</h2>
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <select id="logFilter" class="form-control" style="width: auto; padding: 4px 12px; font-size: 11px; height: 32px;">
+              <option value="">ALL VECTORS</option>
+              <option value="spoofing">SPOOFING</option>
+              <option value="dos">DoS</option>
+              <option value="fuzzing">FUZZING</option>
+            </select>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 11px; cursor: pointer;">
+              <input type="checkbox" id="autoScrollToggle" checked /> AUTO-SCROLL
+            </label>
           </div>
         </div>
 
-        <div
-          style="margin-top: 30px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,193,7,0.1);">
-          <p id="paramsStatus"
-            style="font-size: 11px; color: var(--text-dim); text-align: center; text-transform: uppercase; letter-spacing: 1px;">
-            Ready for command...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Injection Log Panel -->
-    <section class="panel log-panel">
-      <div class="panel-header">
-        <h2>Stream Monitor</h2>
-        <div style="display: flex; gap: 15px; align-items: center;">
-          <select id="logFilter" class="form-control"
-            style="width: auto; padding: 4px 30px 4px 12px; font-size: 11px; height: 32px;">
-            <option value="">ALL VECTORS</option>
-            <option value="spoofing">SPOOFING</option>
-            <option value="dos">DoS</option>
-            <option value="fuzzing">FUZZING</option>
-          </select>
-          <label
-            style="display: flex; align-items: center; gap: 8px; font-size: 11px; cursor: pointer; color: var(--text-dim);">
-            <input type="checkbox" id="autoScrollToggle" checked /> AUTO-SCROLL
-          </label>
-        </div>
-      </div>
-
-      <div class="panel-content" style="padding: 0;">
-        <div class="log-table-wrapper">
+        <div class="log-wrapper">
           <table class="log-table" id="logTable">
             <thead>
               <tr>
@@ -279,31 +207,26 @@
             </thead>
             <tbody id="logBody">
               <tr class="log-empty">
-                <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 40px;">LISTENING FOR
-                  TRAFFIC...</td>
+                <td colspan="6" style="text-align: center; padding: 40px;">LISTENING FOR TRAFFIC...</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div
-          style="padding: 12px 24px; display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05);">
-          <span>TOTAL BUFFERED: <strong id="logCount" style="color: var(--neon-cyan)">0</strong></span>
-          <span>DISPLAYED: <strong id="displayedCount" style="color: var(--neon-cyan)">0</strong></span>
+        <div style="padding: 12px 24px; display: flex; justify-content: space-between; font-size: 10px; opacity: 0.6; border-top: 1px solid #003300;">
+          <span>TOTAL BUFFERED: <strong id="logCount">0</strong></span>
+          <span>DISPLAYED: <strong id="displayedCount">0</strong></span>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 
   <!-- Notification Area -->
   <div id="notificationArea" class="notification-area"></div>
 
   <!-- Scripts -->
-  <script src="/js/utils.js"></script>
-  <script src="/js/websocket-client.js"></script>
-  <script src="/js/auth.js"></script>
-  <script src="/js/ui.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/matrix.js"></script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 
 </html>

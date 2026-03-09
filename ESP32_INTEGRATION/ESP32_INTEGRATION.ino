@@ -16,7 +16,7 @@ const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASSWORD";
 
 // Server Configuration
-const char* serverIP = "192.168.1.100";  // Change to your server IP
+const char* serverIP = "192.168.0.8";  // Updated to match your local IP
 const uint16_t serverPort = 3000;
 
 // CAN Configuration

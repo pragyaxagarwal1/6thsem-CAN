@@ -1,0 +1,41 @@
+[2026-03-09T18:09:15.687Z] [INFO] Server started on port 3000 | {"localIp":"192.168.83.1"}
+[2026-03-09T18:16:56.506Z] [INFO] SIGINT received: closing server
+[2026-03-09T18:16:56.511Z] [INFO] HTTP server closed
+[2026-03-09T18:29:37.923Z] [INFO] Server started on port 3000 | {"localIp":"192.168.83.1"}
+[2026-03-09T18:34:29.072Z] [INFO] SIGINT received: closing server
+[2026-03-09T18:34:29.076Z] [INFO] HTTP server closed
+[2026-03-09T18:34:33.074Z] [INFO] Server started on port 3000 | {"availableIps":["192.168.83.1","192.168.19.1","192.168.0.8"]}
+[2026-03-09T18:36:33.822Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:36:33.825Z] [INFO] ESP32 device connected
+[2026-03-09T18:36:37.572Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:36:38.389Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:36:38.391Z] [INFO] ESP32 device connected
+[2026-03-09T18:39:35.661Z] [INFO] New connection attempt from 127.0.0.1 | {"userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0"}
+[2026-03-09T18:39:35.663Z] [DEBUG] Frontend client connected. Total: 1
+[2026-03-09T18:39:50.131Z] [INFO] Initiating attack | {"type":"spoofing","params":{"id":"0x123","payload":"AABBCCDDEEFF1122","frequency":500,"intensity":50}}
+[2026-03-09T18:44:01.066Z] [WARN] ESP32 heartbeat timeout reached
+[2026-03-09T18:44:01.069Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:44:11.106Z] [INFO] SIGINT received: closing server
+[2026-03-09T18:44:26.448Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:47:13.291Z] [INFO] Server started on port 3000 | {"availableIps":["192.168.83.1","192.168.19.1","192.168.0.8"]}
+[2026-03-09T18:53:12.518Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:53:12.521Z] [INFO] ESP32 device connected
+[2026-03-09T18:53:18.738Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:53:19.928Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:53:19.928Z] [INFO] ESP32 device connected
+[2026-03-09T18:56:59.201Z] [WARN] ESP32 heartbeat timeout reached
+[2026-03-09T18:56:59.204Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:57:01.053Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:57:01.065Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:57:01.067Z] [INFO] ESP32 device connected
+[2026-03-09T18:59:22.880Z] [INFO] ESP32 device disconnected
+[2026-03-09T18:59:22.896Z] [INFO] New connection attempt from 192.168.0.7 | {"userAgent":"ESP32-CAN"}
+[2026-03-09T18:59:22.898Z] [INFO] ESP32 device connected
+[2026-03-09T18:59:39.883Z] [INFO] New connection attempt from 127.0.0.1 | {"userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0"}
+[2026-03-09T18:59:39.885Z] [DEBUG] Frontend client connected. Total: 1
+[2026-03-09T18:59:43.811Z] [INFO] Initiating attack | {"type":"spoofing","params":{"id":"0x123","payload":"AABBCCDDEEFF1122","frequency":500,"intensity":50}}
+[2026-03-09T19:00:15.195Z] [INFO] Initiating attack | {"type":"dos","params":{"frequency":2000,"intensity":75}}
+[2026-03-09T19:19:53.629Z] [INFO] Server started on port 3000 | {"availableIps":["192.168.83.1","192.168.19.1","192.168.0.8"]}
+[2026-03-09T19:19:59.419Z] [INFO] New connection attempt from 127.0.0.1 | {"userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0"}
+[2026-03-09T19:19:59.420Z] [DEBUG] Frontend client connected. Total: 1
+[2026-03-09T19:21:01.425Z] [INFO] SIGINT received: closing server
